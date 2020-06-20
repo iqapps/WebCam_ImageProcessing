@@ -52,19 +52,24 @@ public:
 	{
 		game = gameArg;
 		name = "Raw";
+		uiCount = 0;
 	}
 
-	void Process(float fElapsedTime, frame &input, frame &output)
+	virtual void Process(float fElapsedTime, frame &input, frame &output)
 	{
 		output = input;
 	}
 
-	std::string GetName()
+	virtual std::string GetName()
 	{
 		return name;
 	}
 
+	virtual void DrawUI(int x, int y, int stepy) { }
+
 protected:
 	olc::PixelGameEngine* game;
 	std::string name;
+private:
+	int uiCount;
 };

@@ -90,7 +90,13 @@ public:
 				output.set(i, j, input.get(i, j) >= fThresholdValue ? 1.0f : 0.0f);
 	}
 
-private:
+	virtual void DrawUI(int x, int y, int stepy)
+	{
+		game->DrawString(x, y, "Change threshold value with Z and X keys");
+		y += stepy;
+		game->DrawString(x, y, "Current value = " + std::to_string(fThresholdValue));
+	}
+
 	float fThresholdValue = 0.5f;
 };
 
@@ -115,7 +121,6 @@ public:
 		prev_input = input;
 	}
 
-private:
 	frame prev_input;
 };
 
@@ -147,7 +152,12 @@ public:
 		}
 	}
 
-private:
+	virtual void DrawUI(int x, int y, int stepy)
+	{
+		game->DrawString(x, y, "Change RC constant value with Z and X keys");
+		game->DrawString(x, y+stepy, "Current value = " + std::to_string(fLowPassRC));
+	}
+
 	float fLowPassRC = 0.1f;
 };
 
@@ -179,7 +189,12 @@ public:
 		}
 	}
 
-private:
+	virtual void DrawUI(int x, int y, int stepy)
+	{
+		game->DrawString(x, y, "Change convolution kernel with Z and X keys");
+		game->DrawString(x, y + stepy, "Current kernel = " + std::string((pConvoKernel == kernel_blur) ? "Blur" : "Sharpen"));
+	}
+
 	float* pConvoKernel = kernel_blur;
 	float kernel_blur[9] =
 	{
@@ -227,7 +242,6 @@ public:
 		}
 	}
 
-private:
 	float kernel_sobel_v[9] =
 	{
 		-1.0f, 0.0f, +1.0f,
@@ -338,7 +352,19 @@ public:
 		}
 	}
 
-private:
+	virtual void DrawUI(int x, int y, int stepy)
+	{
+		game->DrawString(x, y, "Change operation with Z and X and C keys");
+		y += stepy;
+		if (morph == DILATION) game->DrawString(x, y, "Current operation = DILATION");
+		if (morph == EROSION) game->DrawString(x, y, "Current operation = EROSION");
+		if (morph == EDGE) game->DrawString(x, y, "Current operation = EDGE");
+		y += stepy;
+		game->DrawString(x, y, "Change Iterations with A and S keys");
+		y += stepy;
+		game->DrawString(x, y, "Current iteration count = " + std::to_string(nMorphCount));
+	}
+
 	MORPHOP morph = DILATION;
 	int nMorphCount = 1;
 	frame activity, threshold;
@@ -374,8 +400,6 @@ public:
 			}
 		}
 	}
-
-private:
 };
 
 class Adaptive : public Processor
@@ -414,7 +438,12 @@ public:
 		}
 	}
 
-private:
+	virtual void DrawUI(int x, int y, int stepy)
+	{
+		game->DrawString(x, y, "Change adaptive threshold bias with Z and X keys");
+		game->DrawString(x, y+stepy, "Current value = " + std::to_string(fAdaptiveBias));
+	}
+
 	float fAdaptiveBias = 1.1f;
 };
 
@@ -520,45 +549,10 @@ public:
 			posx += w;
 		}
 
-		//if (algos.size() > 0)
-		//{
-		//	switch (algos.back())
-		//	{
-		//	case THRESHOLD:
-		//		DrawString(10, 375, "Change threshold value with Z and X keys");
-		//		DrawString(10, 385, "Current value = " + std::to_string(fThresholdValue));
-		//		break;
-
-		//	case LOWPASS:
-		//		DrawString(10, 375, "Change RC constant value with Z and X keys");
-		//		DrawString(10, 385, "Current value = " + std::to_string(fLowPassRC));
-		//		break;
-
-		//	case CONVOLUTION:
-		//		DrawString(10, 375, "Change convolution kernel with Z and X keys");
-		//		DrawString(10, 385, "Current kernel = " + std::string((pConvoKernel == kernel_blur) ? "Blur" : "Sharpen"));
-		//		break;
-
-		//	case MORPHO:
-		//		DrawString(10, 375, "Change operation with Z and X and C keys");
-		//		if (morph == DILATION) DrawString(10, 385, "Current operation = DILATION");
-		//		if (morph == EROSION) DrawString(10, 385, "Current operation = EROSION");
-		//		if (morph == EDGE) DrawString(10, 385, "Current operation = EDGE");
-		//		DrawString(10, 395, "Change Iterations with A and S keys");
-		//		DrawString(10, 405, "Current iteration count = " + std::to_string(nMorphCount));
-
-
-		//		break;
-
-		//	case ADAPTIVE:
-		//		DrawString(10, 375, "Change adaptive threshold bias with Z and X keys");
-		//		DrawString(10, 385, "Current value = " + std::to_string(fAdaptiveBias));
-		//		break;
-
-		//	default:
-		//		break;
-		//	}
-		//}
+		if (algos.size() > 0)
+		{
+			algos.back()->DrawUI(10, 375, 10);
+		}
 
 		if (GetKey(olc::Key::ESCAPE).bPressed) return false;
 		return true;

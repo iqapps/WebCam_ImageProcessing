@@ -75,6 +75,7 @@
 #include "Sobel.h"
 #include "Morpho.h"
 #include "Median.h"
+#include "Invert.h""
 
 class WebCam_ImageProcessing : public olc::PixelGameEngine
 {
@@ -167,6 +168,8 @@ public:
 				{
 					if (newProc == false)
 					{
+						auto p = algos.back();
+						delete(p);
 						algos.pop_back();
 					}
 
@@ -178,7 +181,12 @@ public:
 			}
 		}
 
-		if (GetKey(olc::Key::DEL).bReleased) if(algos.size() > 1) algos.pop_back();
+		if (GetKey(olc::Key::DEL).bReleased && algos.size() > 1)
+		{
+			auto p = algos.back();
+			delete(p);
+			algos.pop_back();
+		}
 
 		input = source;
 		for (Processor *proc : algos)

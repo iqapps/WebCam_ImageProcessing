@@ -19,7 +19,6 @@ struct frame
 		delete[] pixels;
 	}
 
-
 	float get(int x, int y)
 	{
 		if (x >= 0 && x < nFrameWidth && y >= 0 && y < nFrameHeight)

@@ -54,6 +54,9 @@
     <ClInclude Include="Threshold.h">
       <Filter>Header Files\Processor</Filter>
     </ClInclude>
+    <ClInclude Include="Invert.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="escapi.cpp">

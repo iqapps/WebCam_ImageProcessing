@@ -146,6 +146,7 @@
     <ClInclude Include="Convolution.h" />
     <ClInclude Include="escapi.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="Invert.h" />
     <ClInclude Include="Lowpass.h" />
     <ClInclude Include="Median.h" />
     <ClInclude Include="Morpho.h" />

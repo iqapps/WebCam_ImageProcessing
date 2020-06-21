@@ -8,6 +8,10 @@ class Morpho : public Processor
 {
 public:
 	Morpho(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Morpho") { }
+	~Morpho()
+	{
+		activity.~frame();
+	}
 
 	static Registrar<Morpho> registrar;
 	void ProcessKeys(float fElapsedTime)

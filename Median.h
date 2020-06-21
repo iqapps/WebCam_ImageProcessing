@@ -11,21 +11,23 @@ public:
 
 	void ProcessImage(float fElapsedTime, frame& input, frame& output)
 	{
+		float v[25];
+		int n = sizeof(v) / sizeof(v[0]);
+
 		for (int i = 0; i < nFrameWidth; i++)
 		{
 			for (int j = 0; j < nFrameHeight; j++)
 			{
-				std::vector<float> v;
-
+				int ii = 0;
 				for (int n = -2; n < +3; n++)
 				{
 					for (int m = -2; m < +3; m++)
 					{
-						v.push_back(input.get(i + n, j + m));
+						v[ii++] = input.get(i + n, j + m);
 					}
 				}
 
-				std::sort(v.begin(), v.end(), std::greater<float>());
+				std::sort(v, v+n);
 				output.set(i, j, v[12]);
 			}
 		}

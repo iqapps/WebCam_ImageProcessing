@@ -6,6 +6,10 @@ class Motion : public Processor
 {
 public:
 	Motion(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Motion") { }
+	~Motion()
+	{
+		prev_input.~frame();
+	}
 
 	static Registrar<Motion> registrar;
 
@@ -22,6 +26,7 @@ public:
 		prev_input = input;
 	}
 
+private:
 	frame prev_input;
 };
 

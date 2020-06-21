@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Processor">
+      <UniqueIdentifier>{4f694ece-cb4b-4c78-bb6b-6da8204a6fde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="escapi.h">
@@ -21,8 +24,35 @@
     <ClInclude Include="olcPixelGameEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Processors.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Adaptive.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Convolution.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Lowpass.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Median.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Morpho.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Motion.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Sobel.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Threshold.h">
+      <Filter>Header Files\Processor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

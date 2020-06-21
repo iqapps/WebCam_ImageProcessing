@@ -142,9 +142,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Adaptive.h" />
+    <ClInclude Include="Convolution.h" />
     <ClInclude Include="escapi.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="Lowpass.h" />
+    <ClInclude Include="Median.h" />
+    <ClInclude Include="Morpho.h" />
+    <ClInclude Include="Motion.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Processors.h" />
+    <ClInclude Include="Sobel.h" />
+    <ClInclude Include="Threshold.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="escapi.cpp" />

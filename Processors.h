@@ -1,64 +1,43 @@
 #pragma once
 
+#include <unordered_map>
+#include <typeindex>
 #include "olcPixelGameEngine.h"
+#include "Frame.h"
 
-int nFrameWidth = 320;
-int nFrameHeight = 240;
+class Processor;
 
-struct frame
+struct ProcessorInfo
 {
-	float* pixels = nullptr;
-
-	frame()
-	{
-		pixels = new float[nFrameWidth * nFrameHeight];
-	}
-
-	~frame()
-	{
-		delete[] pixels;
-	}
-
-
-	float get(int x, int y)
-	{
-		if (x >= 0 && x < nFrameWidth && y >= 0 && y < nFrameHeight)
-		{
-			return pixels[y * nFrameWidth + x];
-		}
-		else
-			return 0.0f;
-	}
-
-	void set(int x, int y, float p)
-	{
-		if (x >= 0 && x < nFrameWidth && y >= 0 && y < nFrameHeight)
-		{
-			pixels[y * nFrameWidth + x] = p;
-		}
-	}
-
-
-	void operator=(const frame& f)
-	{
-		memcpy(this->pixels, f.pixels, nFrameWidth * nFrameHeight * sizeof(float));
-	}
+	std::string name;
+	std::function<void(std::vector<Processor*>*, olc::PixelGameEngine*)> func;
 };
+
+using typemap = std::unordered_map<std::type_index, ProcessorInfo>;
 
 class Processor
 {
 public:
-	Processor(olc::PixelGameEngine* gameArg)
+	Processor(olc::PixelGameEngine* gameArg, std::string nameArg)
 	{
 		game = gameArg;
-		name = "Raw";
-		uiCount = 0;
+		name = nameArg;
 	}
 
-	virtual void Process(float fElapsedTime, frame &input, frame &output)
+	static typemap& registry();
+
+	template <typename T>
+	static void Create(std::vector<Processor*> *v, olc::PixelGameEngine* game)
+	{
+		v->push_back(new T(game));
+	}
+
+	virtual void ProcessImage(float fElapsedTime, frame &input, frame &output)
 	{
 		output = input;
 	}
+
+	virtual void ProcessKeys(float fElapsedTime) { }
 
 	virtual std::string GetName()
 	{
@@ -69,7 +48,17 @@ public:
 
 protected:
 	olc::PixelGameEngine* game;
-	std::string name;
 private:
-	int uiCount;
+	std::string name;
+};
+
+typemap& Processor::registry() { static typemap impl; return impl; }
+
+template <typename T> 
+struct Registrar
+{
+	Registrar(ProcessorInfo info)
+	{
+		Processor::registry()[typeid(T)] = info;
+	}
 };

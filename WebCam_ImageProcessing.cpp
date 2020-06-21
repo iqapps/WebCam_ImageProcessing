@@ -58,394 +58,23 @@
 	David Barr, aka javidx9, �OneLoneCoder 2019
 */
 
-#define OLC_PGE_APPLICATION
-#include "olcPixelGameEngine.h"
-
-#include "escapi.h"
 #include <vector>
 #include <typeinfo>
+
+#define OLC_PGE_APPLICATION
+#include "olcPixelGameEngine.h"
+#include "escapi.h"
 #include "Processors.h"
 
-enum MORPHOP { DILATION, EROSION, EDGE };
-enum ALGORITHM { THRESHOLD, MOTION, LOWPASS, CONVOLUTION, SOBEL, MORPHO, MEDIAN, ADAPTIVE, };
-
-class Threshold : public Processor
-{
-public:
-	Threshold(olc::PixelGameEngine* gameArg) : Processor(gameArg)
-	{
-		name = "Threshold";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		if (game->GetKey(olc::Key::Z).bHeld) fThresholdValue -= 0.1f * fElapsedTime;
-		if (game->GetKey(olc::Key::X).bHeld) fThresholdValue += 0.1f * fElapsedTime;
-		if (fThresholdValue > 1.0f) fThresholdValue = 1.0f;
-		if (fThresholdValue < 0.0f) fThresholdValue = 0.0f;
-
-		// Perform threshold per pixel
-		for (int i = 0; i < nFrameWidth; i++)
-			for (int j = 0; j < nFrameHeight; j++)
-				output.set(i, j, input.get(i, j) >= fThresholdValue ? 1.0f : 0.0f);
-	}
-
-	virtual void DrawUI(int x, int y, int stepy)
-	{
-		game->DrawString(x, y, "Change threshold value with Z and X keys");
-		y += stepy;
-		game->DrawString(x, y, "Current value = " + std::to_string(fThresholdValue));
-	}
-
-	float fThresholdValue = 0.5f;
-};
-
-class Motion : public Processor
-{
-public:
-	Motion(olc::PixelGameEngine* gameArg) : Processor(gameArg)
-	{
-		name = "Motion";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				output.set(i, j, fabs(input.get(i, j) - prev_input.get(i, j)));
-			}
-		}
-
-		prev_input = input;
-	}
-
-	frame prev_input;
-};
-
-class Lowpass : public Processor
-{
-public:
-	Lowpass(olc::PixelGameEngine* gameArg) : Processor(gameArg)
-	{
-		name = "Lowpass";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		// Respond to user input
-		if (game->GetKey(olc::Key::Z).bHeld) fLowPassRC -= 0.1f * fElapsedTime;
-		if (game->GetKey(olc::Key::X).bHeld) fLowPassRC += 0.1f * fElapsedTime;
-		if (fLowPassRC > 1.0f) fLowPassRC = 1.0f;
-		if (fLowPassRC < 0.0f) fLowPassRC = 0.0f;
-
-		// Pass each pixel through a temporal RC filter
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				float dPixel = input.get(i, j) - output.get(i, j);
-				dPixel *= fLowPassRC;
-				output.set(i, j, dPixel + output.get(i, j));
-			}
-		}
-	}
-
-	virtual void DrawUI(int x, int y, int stepy)
-	{
-		game->DrawString(x, y, "Change RC constant value with Z and X keys");
-		game->DrawString(x, y+stepy, "Current value = " + std::to_string(fLowPassRC));
-	}
-
-	float fLowPassRC = 0.1f;
-};
-
-class Convolution : public Processor
-{
-public:
-	Convolution(olc::PixelGameEngine* gameArg) : Processor(gameArg)
-	{
-		name = "Convolution";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		// Respond to user input
-		if (game->GetKey(olc::Key::Z).bHeld) pConvoKernel = kernel_blur;
-		if (game->GetKey(olc::Key::X).bHeld) pConvoKernel = kernel_sharpen;
-
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				float fSum = 0.0f;
-				for (int n = -1; n < +2; n++)
-					for (int m = -1; m < +2; m++)
-						fSum += input.get(i + n, j + m) * pConvoKernel[(m + 1) * 3 + (n + 1)];
-
-				output.set(i, j, fSum);
-			}
-		}
-	}
-
-	virtual void DrawUI(int x, int y, int stepy)
-	{
-		game->DrawString(x, y, "Change convolution kernel with Z and X keys");
-		game->DrawString(x, y + stepy, "Current kernel = " + std::string((pConvoKernel == kernel_blur) ? "Blur" : "Sharpen"));
-	}
-
-	float* pConvoKernel = kernel_blur;
-	float kernel_blur[9] =
-	{
-		0.0f,   0.125,  0.0f,
-		0.125f, 0.5f,   0.125f,
-		0.0f,   0.125f, 0.0f,
-	};
-	float kernel_sharpen[9] =
-	{
-		0.0f,  -1.0f,  0.0f,
-		-1.0f,  5.0f, -1.0f,
-		0.0f,  -1.0f,  0.0f,
-	};
-
-};
-
-class Sobel : public Processor
-{
-public:
-	Sobel(olc::PixelGameEngine* gameArg) : Processor(gameArg) 
-	{
-		name = "Sobel";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				float fKernelSumH = 0.0f;
-				float fKernelSumV = 0.0f;
-
-				for (int n = -1; n < +2; n++)
-				{
-					for (int m = -1; m < +2; m++)
-					{
-						fKernelSumH += input.get(i + n, j + m) * kernel_sobel_h[(m + 1) * 3 + (n + 1)];
-						fKernelSumV += input.get(i + n, j + m) * kernel_sobel_v[(m + 1) * 3 + (n + 1)];
-					}
-				}
-
-				output.set(i, j, fabs((fKernelSumH + fKernelSumV) / 2.0f));
-			}
-		}
-	}
-
-	float kernel_sobel_v[9] =
-	{
-		-1.0f, 0.0f, +1.0f,
-		-2.0f, 0.0f, +2.0f,
-		-1.0f, 0.0f, +1.0f,
-	};
-	float kernel_sobel_h[9] =
-	{
-		-1.0f, -2.0f, -1.0f,
-		 0.0f, 0.0f, 0.0f,
-		+1.0f, +2.0f, +1.0f,
-	};
-};
-
-class Morpho : public Processor
-{
-public:
-	Morpho(olc::PixelGameEngine* gameArg) : Processor(gameArg)
-	{
-		name = "Morpho";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		// Respond to user input
-		if (game->GetKey(olc::Key::Z).bHeld) morph = DILATION;
-		if (game->GetKey(olc::Key::X).bHeld) morph = EROSION;
-		if (game->GetKey(olc::Key::C).bHeld) morph = EDGE;
-
-		if (game->GetKey(olc::Key::A).bReleased) nMorphCount--;
-		if (game->GetKey(olc::Key::S).bReleased) nMorphCount++;
-		if (nMorphCount > 10.0f) nMorphCount = 10.0f;
-		if (nMorphCount < 1.0f) nMorphCount = 1.0f;
-
-		// Threshold First to binarise image
-		for (int i = 0; i < nFrameWidth; i++)
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				activity.set(i, j, input.get(i, j) > fThresholdValue ? 1.0f : 0.0f);
-			}
-
-		threshold = activity;
-
-		switch (morph)
-		{
-		case DILATION:
-			for (int n = 0; n < nMorphCount; n++)
-			{
-				output = activity;
-
-				for (int i = 0; i < nFrameWidth; i++)
-					for (int j = 0; j < nFrameHeight; j++)
-					{
-						if (activity.get(i, j) == 1.0f)
-						{
-							output.set(i, j, 1.0f);
-							output.set(i - 1, j, 1.0f);
-							output.set(i + 1, j, 1.0f);
-							output.set(i, j - 1, 1.0f);
-							output.set(i, j + 1, 1.0f);
-							output.set(i - 1, j - 1, 1.0f);
-							output.set(i + 1, j + 1, 1.0f);
-							output.set(i + 1, j - 1, 1.0f);
-							output.set(i - 1, j + 1, 1.0f);
-						}
-					}
-
-				activity = output;
-			}
-			break;
-
-		case EROSION:
-			for (int n = 0; n < nMorphCount; n++)
-			{
-				output = activity;
-				for (int i = 0; i < nFrameWidth; i++)
-					for (int j = 0; j < nFrameHeight; j++)
-					{
-
-						float sum = activity.get(i - 1, j) + activity.get(i + 1, j) + activity.get(i, j - 1) + activity.get(i, j + 1) +
-							activity.get(i - 1, j - 1) + activity.get(i + 1, j + 1) + activity.get(i + 1, j - 1) + activity.get(i - 1, j + 1);
-
-						if (activity.get(i, j) == 1.0f && sum < 8.0f)
-						{
-							output.set(i, j, 0.0f);
-						}
-					}
-				activity = output;
-			}
-			break;
-
-		case EDGE:
-			output = activity;
-			for (int i = 0; i < nFrameWidth; i++)
-				for (int j = 0; j < nFrameHeight; j++)
-				{
-
-					float sum = activity.get(i - 1, j) + activity.get(i + 1, j) + activity.get(i, j - 1) + activity.get(i, j + 1) +
-						activity.get(i - 1, j - 1) + activity.get(i + 1, j + 1) + activity.get(i + 1, j - 1) + activity.get(i - 1, j + 1);
-
-					if (activity.get(i, j) == 1.0f && sum == 8.0f)
-					{
-						output.set(i, j, 0.0f);
-					}
-				}
-			break;
-
-		}
-	}
-
-	virtual void DrawUI(int x, int y, int stepy)
-	{
-		game->DrawString(x, y, "Change operation with Z and X and C keys");
-		y += stepy;
-		if (morph == DILATION) game->DrawString(x, y, "Current operation = DILATION");
-		if (morph == EROSION) game->DrawString(x, y, "Current operation = EROSION");
-		if (morph == EDGE) game->DrawString(x, y, "Current operation = EDGE");
-		y += stepy;
-		game->DrawString(x, y, "Change Iterations with A and S keys");
-		y += stepy;
-		game->DrawString(x, y, "Current iteration count = " + std::to_string(nMorphCount));
-	}
-
-	MORPHOP morph = DILATION;
-	int nMorphCount = 1;
-	frame activity, threshold;
-	float fThresholdValue = 0.5f;
-};
-
-class Median : public Processor
-{
-public:
-	Median(olc::PixelGameEngine* gameArg) : Processor(gameArg) 
-	{
-		name = "Median";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				std::vector<float> v;
-
-				for (int n = -2; n < +3; n++)
-				{
-					for (int m = -2; m < +3; m++)
-					{
-						v.push_back(input.get(i + n, j + m));
-					}
-				}
-
-				std::sort(v.begin(), v.end(), std::greater<float>());
-				output.set(i, j, v[12]);
-			}
-		}
-	}
-};
-
-class Adaptive : public Processor
-{
-public:
-	Adaptive(olc::PixelGameEngine* gameArg) : Processor(gameArg) 
-	{
-		name = "Adaptive";
-	}
-
-	void Process(float fElapsedTime, frame& input, frame& output)
-	{
-		// Respond to user input
-		if (game->GetKey(olc::Key::Z).bHeld) fAdaptiveBias -= 0.1f * fElapsedTime;
-		if (game->GetKey(olc::Key::X).bHeld) fAdaptiveBias += 0.1f * fElapsedTime;
-		if (fAdaptiveBias > 1.5f) fAdaptiveBias = 1.5f;
-		if (fAdaptiveBias < 0.5f) fAdaptiveBias = 0.5f;
-
-		for (int i = 0; i < nFrameWidth; i++)
-		{
-			for (int j = 0; j < nFrameHeight; j++)
-			{
-				float fRegionSum = 0.0f;
-
-				for (int n = -2; n < +3; n++)
-				{
-					for (int m = -2; m < +3; m++)
-					{
-						fRegionSum += input.get(i + n, j + m);
-					}
-				}
-
-				fRegionSum /= 25.0f;
-				output.set(i, j, input.get(i, j) > (fRegionSum * fAdaptiveBias) ? 1.0f : 0.0f);
-			}
-		}
-	}
-
-	virtual void DrawUI(int x, int y, int stepy)
-	{
-		game->DrawString(x, y, "Change adaptive threshold bias with Z and X keys");
-		game->DrawString(x, y+stepy, "Current value = " + std::to_string(fAdaptiveBias));
-	}
-
-	float fAdaptiveBias = 1.1f;
-};
+// Add processors here
+#include "Threshold.h"
+#include "Adaptive.h"
+#include "Motion.h"
+#include "Lowpass.h"
+#include "Convolution.h"
+#include "Sobel.h"
+#include "Morpho.h"
+#include "Median.h"
 
 class WebCam_ImageProcessing : public olc::PixelGameEngine
 {
@@ -474,6 +103,7 @@ public:
 		capture.mHeight = nFrameHeight;
 		capture.mTargetBuf = new int[nFrameWidth * nFrameHeight];
 		if (initCapture(0, &capture) == 0)	return false;
+		algos.push_back(new Threshold(this));
 		return true;
 	}
 
@@ -506,20 +136,54 @@ public:
 			}
 		}
 
-		if (GetKey(olc::Key::K1).bReleased) algos.push_back(new Threshold(this));
-		if (GetKey(olc::Key::K2).bReleased) algos.push_back(new Motion(this));
-		if (GetKey(olc::Key::K3).bReleased) algos.push_back(new Lowpass(this));
-		if (GetKey(olc::Key::K4).bReleased) algos.push_back(new Convolution(this));
-		if (GetKey(olc::Key::K5).bReleased) algos.push_back(new Sobel(this));
-		if (GetKey(olc::Key::K6).bReleased) algos.push_back(new Morpho(this));
-		if (GetKey(olc::Key::K7).bReleased) algos.push_back(new Median(this));
-		if (GetKey(olc::Key::K8).bReleased) algos.push_back(new Adaptive(this));
-		if (GetKey(olc::Key::DEL).bReleased) if(algos.size() > 0) algos.pop_back();
+		Processor *proc = algos.back();
+
+		proc->ProcessKeys(fElapsedTime);
+
+		int ii = 0;
+		int procIndex = -1;
+		for (auto& info : Processor::registry())
+		{
+			if (info.second.name == proc->GetName())
+			{ 
+				procIndex = ii;
+			}
+
+			ii++;
+		}
+
+		int prevIndex = procIndex;
+		if (GetKey(olc::Key::PGDN).bReleased && procIndex > 0) procIndex--;
+		if (GetKey(olc::Key::PGUP).bReleased && procIndex < (ii - 1)) procIndex++;
+
+		bool newProc = GetKey(olc::Key::ENTER).bReleased;
+
+		if (prevIndex != procIndex || newProc)
+		{
+			int jj = 0;
+			for (auto& info : Processor::registry())
+			{
+				if (procIndex == jj)
+				{
+					if (newProc == false)
+					{
+						algos.pop_back();
+					}
+
+					info.second.func(&algos, this);
+					break;
+				}
+
+				jj++;
+			}
+		}
+
+		if (GetKey(olc::Key::DEL).bReleased) if(algos.size() > 1) algos.pop_back();
 
 		input = source;
 		for (Processor *proc : algos)
 		{
-			proc->Process(fElapsedTime, input, output);
+			proc->ProcessImage(fElapsedTime, input, output);
 			input = output;
 		}
 
@@ -531,27 +195,22 @@ public:
 		DrawString(150, 255, "INPUT");
 		DrawString(480, 255, "OUTPUT");
 
-		DrawString(10, 275, "1) Threshold");
-		DrawString(10, 285, "2) Absolute Motion");
-		DrawString(10, 295, "3) Low-Pass Temporal Filtering");
-		DrawString(10, 305, "4) Convolution (Blurring/Sharpening)");
-		DrawString(10, 315, "5) Sobel Edge Detection");
-		DrawString(10, 325, "6) Binary Morphological Operations (Erosion/Dilation)");
-		DrawString(10, 335, "7) Median Filter");
-		DrawString(10, 345, "8) Adaptive Threshold");
+		DrawString(10, 275, "Choose Processor using PGUP or PGDN keys");
+		DrawString(10, 285, "Add chosen processor using ENTER");
+		DrawString(10, 295, "Remove last processor using DEL");
 
 		int posx = 10;
 		for (Processor *algo : algos)
 		{
 			std::string out = algo->GetName();
 			int w = out.length() * 10;
-			DrawString(posx, 355, out);
+			DrawString(posx, 325, out);
 			posx += w;
 		}
 
 		if (algos.size() > 0)
 		{
-			algos.back()->DrawUI(10, 375, 10);
+			algos.back()->DrawUI(10, 355, 10);
 		}
 
 		if (GetKey(olc::Key::ESCAPE).bPressed) return false;

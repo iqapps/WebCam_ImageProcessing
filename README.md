@@ -45,10 +45,10 @@ As all processors needs some common functionallity, I have created a base class 
 * Hold private frames for sequential image processing
 
 **As a user, with this code running, you can:**
-* Add one processor after another using the ENTER key or you
-* Delete the last added with the DEL key.
-* The last processor is selectable from all available using the PGUP and PGDN keys.
-* The last added processors parameters, can be edited with the arrow keys, while viewing the image change.
+* Add one processor after another using the ENTER key
+* Delete the last added with the DEL key
+* The last processor is selectable from all available using the PGUP and PGDN keys
+* The last added processors parameters, can be edited with the arrow keys, while viewing the image change
 
 **As a developer you add new image processors by:**
 * copy an existing processor file

@@ -38,6 +38,6 @@ The last processor is selectable from all available, and its parameters can be e
 the keyboard, while viewing the image change.
 
 As a developer you just copy a processor file, replace the name, replace the image processing code,
-and add the processor with a include at the top of the main cpp file. Thats it.
+and add the processor with #include at the top of the main cpp file. Thats it.
 
 Have fun...

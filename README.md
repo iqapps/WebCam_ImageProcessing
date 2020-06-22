@@ -22,7 +22,7 @@ Assembler, Forth, Perl, Unix BSD Shell, Many basic dialects, mostly Visual Basic
 
 Languages I have avoided, mostly on purpose, are Python, PHP, C and C++. I think Python and PHP are terrible in syntax, but it is quite impressive what can be made with phyton, but this still dont make Python attractive to me.
 
-But C++ I need now. It is a language I am getting the grips on during the last few years. I create hardware and firmware for vaious PLC projects, based on At-Mega MCU's. So I need to learn more quirks of C++ to make my work better.
+But C++ I need now. It is a language I am getting the grips on during the last few years. I create hardware and firmware for various, PLC kind of, projects, based on At-Mega MCU's. So I need to learn more quirks of C++ to make my work better.
 
 Therefore, I look on Youtube for educational C++ videos, and I find mostly uninteresting videos about learning C++ in a few hours and such, mostly crap with no appeal whatsoever.
 

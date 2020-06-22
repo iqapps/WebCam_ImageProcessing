@@ -18,7 +18,7 @@ I have 40+ year of programming, starting from assembler of the 6502 that was use
 
 I have, through the years, worked professioally with each of the following languages for at least 5 years:
 
-Assembler, Perl, Unix BSD Shell, Visual Basic, Delphi, Javascript, C# and more.
+Assembler, Forth, Perl, Unix BSD Shell, Many basic dialects, mostly Visual Basic, Delphi, Javascript, C#, SQL, and more.
 
 Languages I have avoided, mostly on purpose, are Python, PHP, C and C++. I think Python and PHP are terrible in syntax, but it is quite impressive what can be made with phyton, but this still dont make Python attractive to me.
 

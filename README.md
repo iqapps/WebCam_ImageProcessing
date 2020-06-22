@@ -32,7 +32,15 @@ I immediately subscribed and watched quite a few of the videos from him. But the
 
 I downloaded the fantastic work by David Barr, and used my weekend to rewrite some parts and add a kind of plugin system to make image processors in separate files and pluggable - in development - not in runtime.
 
-I wanted the image processors to be added after each other, so their input and output must of course be piped somehow. Also as the processors maybe need previous frame etc, these frames must be local to the individual processor.
+I also wanted the image processors to be able to be added after each other during runtime so the system could have one or more image processors after each other, ex. Motion, Threshold and Morphing, therefore each processor must be able pipe their work from one to another somehow. As a processor maybe need other image frames for their own work, these frames must be local to the individual processor.
+
+**A single processor can now:**
+* Register itself with typeid and factory method
+* Return its name
+* Process a image frame
+* Write info to UI about self
+* Process keyboard input
+* Hold private frames for sequential image processing
 
 **As a user, with this code running, you can:**
 * Add one processor after another using the ENTER key or you

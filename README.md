@@ -12,7 +12,7 @@ Here's a piece of the introduction comments from the mainfile WebCam_ImageProces
 	~~~~~~~~~~~~~~~
 	Copyright 2018-2019 OneLoneCoder.com
 
-##Why did I do this ?
+## Why did I do this ?
 
 I have 40+ year of programming, starting from assembler of the 6502 that was used for a product, 
 an IBM third party SNA protocol converter, and personally the 8081 that was inside the
@@ -22,17 +22,19 @@ I have, through the years, worked professioally with each of the following langu
 
 Assembler, Perl, Unix BSD Shell, Visual Basic, Delphi, Javascript, C# and more.
 
-Languages i have avoided on purpose are Phyton, PHP, C and C++. Phyton and PHP are terrible in structure,
-but it is quite impressive what can be made with phyton, but this still dont make it attractive to me.
+Languages I have avoided, mostly on purpose, are Python, PHP, C and C++. I think Python and PHP are 
+terrible in syntax, but it is quite impressive what can be made with phyton, but this still 
+dont make Python attractive to me.
 
-But C++ is the latest language I am learning by this time. I need it to make PLC projects, based on
-Arduino mostly. So I need to learn more quirks of C++ to make my work better.
+But C++ I need now. It is a language I am getting the grips on during the last few years.
+I create hardware and firmware for vaious PLC projects, based on At-Mega MCU's. So I need to learn more
+quirks of C++ to make my work better.
 
-So...I look on youytube for C++...and find mostly uninteresting videos about learning C++ etc.
+Therefore, I look on Youtube for educational C++ videos, and I find mostly uninteresting videos about 
+learning C++ in a few hours and such, mostly crap with no appeal whatsoever.
 
-But I also found jarvidX9, and caught interest immediately because of the hands-on and nice presentation.
-
-Please, keep them coming David.
+But I also found jarvidX9 aka David Barr, and caught interest immediately because of the hands-on and
+the nice presentation. Please, keep them coming David.
 
 I immediately subscribed and watched quite a few of the videos from him. But the 8 bit of image processing
 video was the one that really caught my interest.

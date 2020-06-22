@@ -64,7 +64,7 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 #include "escapi.h"
-#include "Processors.h"
+#include "Processor.h"
 
 // Add processors here
 #include "Threshold.h"

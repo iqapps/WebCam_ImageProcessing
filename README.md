@@ -14,7 +14,7 @@ Here's a piece of the introduction comments from the mainfile WebCam_ImageProces
 
 ## Why did I do this ?
 
-I have 40+ year of programming, starting from assembler of the 6502 that was used for a product, an IBM third party SNA protocol converter, and personally the 8081 that was inside the Sinclair Spectrum.
+I have 40+ year of programming, starting from assembler of the 6502 that was used for a product, an IBM third party SNA protocol converter, and for private projects the Zilog Z80A that was inside the Sinclair Spectrum.
 
 I have, through the years, worked professioally with each of the following languages for at least 5 years:
 

@@ -2,9 +2,9 @@
 
 This code is heavily based on code from David Barr, aka javidx9, �OneLoneCoder 2019
 
-Here's a bit of the introduction comments from the mainfile WebCam_ImageProcessing.cpp
+Here's a piece of the introduction comments from the mainfile WebCam_ImageProcessing.cpp
 
-8-Bits Of Image Processing You Should Know
+	8-Bits Of Image Processing You Should Know
 
 	"Colin, at least you'll always get 700s now..." - javidx9
 
@@ -12,7 +12,7 @@ Here's a bit of the introduction comments from the mainfile WebCam_ImageProcessi
 	~~~~~~~~~~~~~~~
 	Copyright 2018-2019 OneLoneCoder.com
 
-##Why ?
+##Why did I do this ?
 
 I have 40+ year of programming, starting from assembler of the 6502 that was used for a product, 
 an IBM third party SNA protocol converter, and personally the 8081 that was inside the

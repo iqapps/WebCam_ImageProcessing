@@ -34,13 +34,13 @@ I downloaded the fantastic work by David Barr, and used my weekend to rewrite so
 
 I wanted the image processors to be added after each other, so their input and output must of course be piped somehow. Also as the processors maybe need previous frame etc, these frames must be local to the individual processor.
 
-*As a user, with this code running, you can:*
+**As a user, with this code running, you can:**
 * Add one processor after another using the ENTER key or you
 * Delete the last added with the DEL key.
 * The last processor is selectable from all available using the PGUP and PGDN keys.
 * The last added processors parameters, can be edited with the arrow keys, while viewing the image change.
 
-*As a developer you add new image processors by:*
+**As a developer you add new image processors by:**
 * copy an existing processor file
 * Replace the name throughout the file
 * Replace the image processing code

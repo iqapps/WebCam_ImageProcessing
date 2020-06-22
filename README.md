@@ -34,6 +34,8 @@ I downloaded the fantastic work by David Barr, and used my weekend to rewrite so
 
 I also wanted the image processors to be able to be added after each other during runtime so the system could have one or more image processors after each other, ex. Motion, Threshold and Morphing, therefore each processor must be able pipe their work from one to another somehow. As a processor maybe need other image frames for their own work, these frames must be local to the individual processor.
 
+As all processors needs some common functionallity, I have created a base class to handle all the complexity of registering and interfacing with the master program code.
+
 **A single processor can now:**
 * Register itself with typeid and factory method
 * Return its name

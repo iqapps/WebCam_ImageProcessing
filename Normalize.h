@@ -42,12 +42,16 @@ public:
 			}
 		}
 
+		// average over 10 frames to eliminate normalization flicker
+		fPrevLight = fPrevLight * 0.9f + fLightest * 0.1;
+		fPrevDark = fPrevDark * 0.9f + fDarkest * 0.1;
+
 		for (int i = 0; i < nFrameWidth; i++)
 		{
 			for (int j = 0; j < nFrameHeight; j++)
 			{
 				float t = input.get(i, j);
-				t = (t - fDarkest) * ((fNewLight - fNewDark) / (fLightest - fDarkest)) + fNewDark;
+				t = (t - fPrevDark) * ((fNewLight - fNewDark) / (fPrevLight - fPrevDark)) + fNewDark;
 				output.set(i, j, t);
 			}
 		}
@@ -65,6 +69,8 @@ public:
 private:
 	float fNewDark = 0;
 	float fNewLight = 1;
+	float fPrevDark = 0;
+	float fPrevLight = 1;
 };
 
 Registrar<Normalize> Normalize::registrar(ProcessorInfo{ "Normalize", Processor::Create<Normalize> });

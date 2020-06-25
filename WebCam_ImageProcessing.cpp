@@ -134,7 +134,7 @@ public:
 				RGBint col;
 				int id = y * capture.mWidth + x;
 				col.rgb = capture.mTargetBuf[id];
-				source.pixels[y * nFrameWidth + x] = (float)col.c[1] / 255.0f;
+				source.pixels[y * nFrameWidth + x] = (float)col.c[1] * 0.3f / 255.0f + (float)col.c[2] * 0.6f / 255.0f + (float)col.c[3] * 0.1f / 255.0f;
 			}
 		}
 

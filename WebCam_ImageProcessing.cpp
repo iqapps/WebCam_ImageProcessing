@@ -76,6 +76,7 @@
 #include "Morpho.h"
 #include "Median.h"
 #include "Invert.h""
+#include "Normalize.h"
 
 class WebCam_ImageProcessing : public olc::PixelGameEngine
 {

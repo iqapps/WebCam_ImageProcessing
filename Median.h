@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Processors.h"
+#include <Vector>
 
 class Median : public Processor
 {
@@ -11,24 +12,27 @@ public:
 
 	void ProcessImage(float fElapsedTime, frame& input, frame& output)
 	{
-		float v[25];
-		int n = sizeof(v) / sizeof(v[0]);
+		std::vector<float> v;
 
 		for (int i = 0; i < nFrameWidth; i++)
 		{
 			for (int j = 0; j < nFrameHeight; j++)
 			{
-				int ii = 0;
+				v.clear();
+
 				for (int n = -2; n < +3; n++)
 				{
 					for (int m = -2; m < +3; m++)
 					{
-						v[ii++] = input.get(i + n, j + m);
+						v.push_back(input.get(i + n, j + m));
 					}
 				}
 
-				std::sort(v, v+n);
-				output.set(i, j, v[12]);
+				std::vector<float>::iterator first = v.begin();
+				std::vector<float>::iterator last = v.end();
+				std::vector<float>::iterator middle = first + (last - first) / 2;
+				std::nth_element(first, middle, last); // can specify comparator as optional 4th arg
+				output.set(i, j, *middle);
 			}
 		}
 	}

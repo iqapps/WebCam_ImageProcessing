@@ -7,6 +7,11 @@ class Lowpass : public Processor
 public:
 	Lowpass(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Lowpass") { }
 
+	~Lowpass()
+	{
+		prev_output.~frame();
+	}
+
 	static Registrar<Lowpass> registrar;
 
 	void ProcessKeys(float fElapsedTime)
@@ -25,11 +30,13 @@ public:
 		{
 			for (int j = 0; j < nFrameHeight; j++)
 			{
-				float dPixel = input.get(i, j) - output.get(i, j);
+				float dPixel = input.get(i, j) - prev_output.get(i, j);
 				dPixel *= fLowPassRC;
-				output.set(i, j, dPixel + output.get(i, j));
+				output.set(i, j, dPixel + prev_output.get(i, j));
 			}
 		}
+
+		prev_output = output;
 	}
 
 	void DrawUI(int x, int y, int stepy)
@@ -39,6 +46,7 @@ public:
 	}
 
 private:
+	frame prev_output;
 	float fLowPassRC = 0.1f;
 };
 

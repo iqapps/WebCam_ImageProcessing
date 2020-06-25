@@ -20,11 +20,13 @@ public:
 
 	void ProcessImage(float fElapsedTime, frame& input, frame& output)
 	{
+		float fRegionSum = 0.0f;
+
 		for (int i = 0; i < nFrameWidth; i++)
 		{
 			for (int j = 0; j < nFrameHeight; j++)
 			{
-				float fRegionSum = 0.0f;
+				fRegionSum = 0;
 
 				for (int n = -2; n < +3; n++)
 				{

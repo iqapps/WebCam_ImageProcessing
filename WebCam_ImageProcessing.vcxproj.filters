@@ -57,6 +57,9 @@
     <ClInclude Include="Invert.h">
       <Filter>Header Files\Processor</Filter>
     </ClInclude>
+    <ClInclude Include="Normalize.h">
+      <Filter>Header Files\Processor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="escapi.cpp">

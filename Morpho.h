@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Processors.h"
+#include "Processor.h"
 
 enum MORPHOP { DILATION, EROSION, EDGE };
 

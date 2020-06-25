@@ -27,9 +27,6 @@
     <ClInclude Include="Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Processors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Adaptive.h">
       <Filter>Header Files\Processor</Filter>
     </ClInclude>
@@ -59,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="Normalize.h">
       <Filter>Header Files\Processor</Filter>
+    </ClInclude>
+    <ClInclude Include="Processor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

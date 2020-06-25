@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Processors.h"
+#include "Processor.h"
 #include <Vector>
 
 class Median : public Processor

@@ -153,7 +153,7 @@
     <ClInclude Include="Motion.h" />
     <ClInclude Include="Normalize.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
-    <ClInclude Include="Processors.h" />
+    <ClInclude Include="Processor.h" />
     <ClInclude Include="Sobel.h" />
     <ClInclude Include="Threshold.h" />
   </ItemGroup>

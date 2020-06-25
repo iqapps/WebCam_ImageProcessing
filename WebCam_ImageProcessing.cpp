@@ -64,7 +64,7 @@
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
 #include "escapi.h"
-#include "Processors.h"
+#include "Processor.h"
 
 // Add processors here
 #include "Threshold.h"
@@ -75,7 +75,7 @@
 #include "Sobel.h"
 #include "Morpho.h"
 #include "Median.h"
-#include "Invert.h""
+#include "Invert.h"
 #include "Normalize.h"
 
 class WebCam_ImageProcessing : public olc::PixelGameEngine

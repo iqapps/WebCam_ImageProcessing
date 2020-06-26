@@ -93,6 +93,7 @@ public:
 	};
 
 	int nCameras = 0;
+	int sCamera = 0;
 	SimpleCapParams capture;
 
 public:
@@ -101,10 +102,11 @@ public:
 		// Initialise webcam to screen dimensions
 		nCameras = setupESCAPI();
 		if (nCameras == 0)	return false;
+		sCamera = nCameras - 1; // always pick the last camera in list
 		capture.mWidth = nFrameWidth;
 		capture.mHeight = nFrameHeight;
 		capture.mTargetBuf = new int[nFrameWidth * nFrameHeight];
-		if (initCapture(0, &capture) == 0)	return false;
+		if (initCapture(sCamera, &capture) == 0)	return false;
 		algos.push_back(new Threshold(this));
 		return true;
 	}
@@ -124,8 +126,8 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		doCapture(0);
-		while (isCaptureDone(0) == 0) { }
+		doCapture(sCamera);
+		while (isCaptureDone(sCamera) == 0) { }
 
 		for (int y = 0; y < capture.mHeight; y++)
 		{

@@ -57,11 +57,11 @@
     <ClInclude Include="Processor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Normalize.h">
-      <Filter>Header Files\Processor</Filter>
-    </ClInclude>
     <ClInclude Include="Processor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Normalize.h">
+      <Filter>Header Files\Processors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

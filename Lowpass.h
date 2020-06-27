@@ -5,7 +5,7 @@
 class Lowpass : public Processor
 {
 public:
-	Lowpass() : Processor("Lowpass") { }
+	Lowpass() : ProcessorInst(Lowpass) { }
 
 	~Lowpass()
 	{
@@ -50,4 +50,4 @@ private:
 	float fLowPassRC = 0.1f;
 };
 
-Registrar<Lowpass> Lowpass::registrar(ProcessorInfo{ "Lowpass", Processor::Create<Lowpass> });
+RegistrarInst(Lowpass);

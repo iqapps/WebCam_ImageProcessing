@@ -5,7 +5,7 @@
 class Convolution : public Processor
 {
 public:
-	Convolution() : Processor("Convolution") { }
+	Convolution() : ProcessorInst(Convolution) { }
 
 	static Registrar<Convolution> registrar;
 
@@ -55,4 +55,5 @@ private:
 
 };
 
-Registrar<Convolution> Convolution::registrar(ProcessorInfo{ "Convolution", Processor::Create<Convolution> });
+RegistrarInst(Convolution);
+

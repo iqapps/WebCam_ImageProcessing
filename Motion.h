@@ -5,7 +5,7 @@
 class Motion : public Processor
 {
 public:
-	Motion() : Processor("Motion") { }
+	Motion() : ProcessorInst(Motion) { }
 	~Motion()
 	{
 		prev_input.~frame();
@@ -30,4 +30,4 @@ private:
 	frame prev_input;
 };
 
-Registrar<Motion> Motion::registrar(ProcessorInfo{ "Motion", Processor::Create<Motion> });
+RegistrarInst(Motion);

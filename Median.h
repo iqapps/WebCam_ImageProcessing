@@ -6,7 +6,7 @@
 class Median : public Processor
 {
 public:
-	Median() : Processor("Median") { }
+	Median() : ProcessorInst(Median) { }
 
 	static Registrar<Median> registrar;
 
@@ -38,4 +38,4 @@ public:
 	}
 };
 
-Registrar<Median> Median::registrar(ProcessorInfo{ "Median", Processor::Create<Median> });
+RegistrarInst(Median);

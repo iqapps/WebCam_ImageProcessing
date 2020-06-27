@@ -5,7 +5,7 @@
 class Sobel : public Processor
 {
 public:
-	Sobel() : Processor("Sobel") { }
+	Sobel() : ProcessorInst(Sobel) { }
 
 	static Registrar<Sobel> registrar;
 
@@ -47,4 +47,4 @@ private:
 	};
 };
 
-Registrar<Sobel> Sobel::registrar(ProcessorInfo{ "Sobel", Processor::Create<Sobel> });
+RegistrarInst(Sobel);

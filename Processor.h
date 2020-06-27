@@ -44,7 +44,10 @@ private:
 olc::PixelGameEngine* Processor::game;
 typemap& Processor::registry() { static typemap impl; return impl; }
 
-template <typename T> 
+// The contruction below eases registration code in the processor implementation immensely
+// Register a processor with "RegistarInst(Normalize);", thats it
+
+template <typename T>
 struct Registrar
 {
 	Registrar(ProcessorInfo info)
@@ -52,3 +55,7 @@ struct Registrar
 		Processor::registry()[typeid(T)] = info;
 	}
 };
+
+#define ToString(t) #t
+#define RegistrarInst(T) Registrar<T> T::registrar(ProcessorInfo {ToString(T) , Processor::Create<T> })
+#define ProcessorInst(T) Processor(ToString(T))

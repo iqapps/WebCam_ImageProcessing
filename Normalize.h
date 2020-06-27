@@ -5,7 +5,7 @@
 class Normalize : public Processor
 {
 public:
-	Normalize() : Processor("Normalize") { }
+	Normalize() : ProcessorInst(Normalize) { }
 
 	~Normalize()
 	{
@@ -73,4 +73,4 @@ private:
 	float fPrevLight = 1;
 };
 
-Registrar<Normalize> Normalize::registrar(ProcessorInfo{ "Normalize", Processor::Create<Normalize> });
+RegistrarInst(Normalize);

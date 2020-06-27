@@ -5,7 +5,7 @@
 class Threshold : public Processor
 {
 public:
-	Threshold() : Processor("Threshold") { }
+	Threshold() : ProcessorInst(Threshold) { }
 
 	static Registrar<Threshold> registrar;
 
@@ -39,4 +39,4 @@ private:
 	float fThresholdValue = 0.5f;
 };
 
-Registrar<Threshold> Threshold::registrar(ProcessorInfo { "Threshold", Processor::Create<Threshold> });
+RegistrarInst(Threshold);

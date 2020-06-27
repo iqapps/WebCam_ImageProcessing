@@ -7,7 +7,7 @@ enum MORPHOP { DILATION, EROSION, EDGE };
 class Morpho : public Processor
 {
 public:
-	Morpho() : Processor("Morpho") { }
+	Morpho() : ProcessorInst(Morpho) { }
 	~Morpho()
 	{
 		activity.~frame();
@@ -165,4 +165,4 @@ private:
 	frame activity;
 };
 
-Registrar<Morpho> Morpho::registrar(ProcessorInfo{ "Morpho", Processor::Create<Morpho> });
+RegistrarInst(Morpho);

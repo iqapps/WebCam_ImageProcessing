@@ -5,7 +5,7 @@
 class Adaptive : public Processor
 {
 public:
-	Adaptive() : Processor("Adaptive") { }
+	Adaptive() : ProcessorInst(Adaptive) { }
 
 	static Registrar<Adaptive> registrar;
 
@@ -52,4 +52,4 @@ private:
 	float fAdaptiveBias = 1.1f;
 };
 
-Registrar<Adaptive> Adaptive::registrar(ProcessorInfo { "Adaptive", Processor::Create<Adaptive> });
+RegistrarInst(Adaptive);

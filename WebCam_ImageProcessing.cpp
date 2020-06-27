@@ -78,6 +78,12 @@
 #include "Invert.h"
 #include "Normalize.h"
 
+struct ProcItem
+{
+	Processor* proc;
+	int index;
+};
+
 class WebCam_ImageProcessing : public olc::PixelGameEngine
 {
 public:
@@ -113,14 +119,15 @@ public:
 		// start with the Threshold processor
 		const type_info& procType = typeid(Threshold);
 		auto factory = Processor::registry().find(procType)->second.func;
-		algos.push_back(factory());
-		prevIndex = 0;
 
+		int index = 0;
 		for (auto& info : Processor::registry())
 		{
-			if(info.first == procType) { break; }
-			prevIndex++;
+			if (info.first == procType) { break; }
+			index++;
 		}
+
+		proclist.push_back(ProcItem{ factory(), index });
 
 		return true;
 	}
@@ -136,7 +143,7 @@ public:
 	}
 
 	frame source, input, output;
-	std::vector<Processor*> algos;
+	std::vector<ProcItem> proclist;
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
@@ -155,28 +162,31 @@ public:
 		}
 
 		int procCount = Processor::registry().size();
-		algos.back()->ProcessKeys(fElapsedTime);
-		int procIndex = prevIndex;
+		proclist.back().proc->ProcessKeys(fElapsedTime);
+		int procIndex = proclist.back().index;
 
 		if (GetKey(olc::Key::PGDN).bReleased && procIndex > 0) procIndex--;
 		if (GetKey(olc::Key::PGUP).bReleased && procIndex + 1 < procCount) procIndex++;
 		bool newProc = GetKey(olc::Key::ENTER).bReleased;
 
-		if (prevIndex != procIndex || newProc)
+		if (proclist.back().index != procIndex || newProc)
 		{
 			int jj = 0;
 			for (auto& info : Processor::registry())
 			{
 				if (jj == procIndex)
 				{
+					// If not adding a new processor with the ENTER key
 					if (newProc == false)
 					{
-						auto p = algos.back();
-						delete(p);
-						algos.pop_back();
+						// clean up memory and pop one
+						auto p = proclist.back();
+						delete(p.proc);
+						proclist.pop_back();
 					}
 
-					algos.push_back(info.second.func());
+					// Add the current proc
+					proclist.push_back(ProcItem{ info.second.func(), procIndex });
 					break;
 				}
 
@@ -184,26 +194,24 @@ public:
 			}
 		}
 
-		prevIndex = procIndex;
-
-		if (GetKey(olc::Key::DEL).bReleased && algos.size() > 1)
+		if (GetKey(olc::Key::DEL).bReleased && proclist.size() > 1)
 		{
-			auto p = algos.back();
-			delete(p);
-			algos.pop_back();
+			auto p = proclist.back();
+			delete(p.proc);
+			proclist.pop_back();
 		}
 
 		input = source;
-		for (Processor *proc : algos)
+		for (ProcItem proc : proclist)
 		{
-			proc->ProcessImage(fElapsedTime, input, output);
+			proc.proc->ProcessImage(fElapsedTime, input, output);
 			input = output;
 		}
 
 		// DRAW STUFF ONLY HERE
 		Clear(olc::DARK_BLUE);
 		DrawFrame(source, 10, 10);
-		DrawFrame(algos.size() == 0 ? source : output, 340, 10);
+		DrawFrame(proclist.size() == 0 ? source : output, 340, 10);
 
 		DrawString(150, 255, "INPUT");
 		DrawString(480, 255, "OUTPUT");
@@ -213,24 +221,23 @@ public:
 		DrawString(10, 295, "Remove last processor using DEL");
 
 		int posx = 10;
-		for (Processor *algo : algos)
+		for (ProcItem pi : proclist)
 		{
-			std::string out = algo->GetName();
+			std::string out = pi.proc->GetName();
 			int w = out.length() * 10;
 			DrawString(posx, 325, out);
 			posx += w;
 		}
 
-		if (algos.size() > 0)
+		if (proclist.size() > 0)
 		{
-			algos.back()->DrawUI(10, 355, 10);
+			proclist.back().proc->DrawUI(10, 355, 10);
 		}
 
 		if (GetKey(olc::Key::ESCAPE).bPressed) return false;
 		return true;
 	}
 private:
-	int prevIndex;
 	Processor* current;
 };
 

@@ -5,7 +5,7 @@
 class Invert : public Processor
 {
 public:
-	Invert() : Processor("Invert") { }
+	Invert() : ProcessorInst(Invert) { }
 
 	static Registrar<Invert> registrar;
 
@@ -21,5 +21,4 @@ public:
 	}
 };
 
-Registrar<Invert> Invert::registrar(ProcessorInfo{ "Invert", Processor::Create<Invert> });
-#pragma once
+RegistrarInst(Invert);

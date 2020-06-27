@@ -6,7 +6,7 @@
 class Median : public Processor
 {
 public:
-	Median(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Median") { }
+	Median() : Processor("Median") { }
 
 	static Registrar<Median> registrar;
 

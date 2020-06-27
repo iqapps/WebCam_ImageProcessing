@@ -10,7 +10,7 @@ class Processor;
 struct ProcessorInfo
 {
 	std::string name;
-	std::function<void(std::vector<Processor*>*, olc::PixelGameEngine*)> func;
+	std::function<Processor* ()> func;
 };
 
 using typemap = std::unordered_map<std::type_index, ProcessorInfo>;
@@ -18,40 +18,30 @@ using typemap = std::unordered_map<std::type_index, ProcessorInfo>;
 class Processor
 {
 public:
-	Processor(olc::PixelGameEngine* gameArg, std::string nameArg)
+	Processor(std::string nameArg)
 	{
-		game = gameArg;
 		name = nameArg;
 	}
 
 	static typemap& registry();
 
 	template <typename T>
-	static void Create(std::vector<Processor*> *v, olc::PixelGameEngine* game)
-	{
-		v->push_back(new T(game));
-	}
+	static T* Create() { return new T(); }
 
-	virtual void ProcessImage(float fElapsedTime, frame &input, frame &output)
-	{
-		output = input;
-	}
+	static void SetEngine(olc::PixelGameEngine* engine) { game = engine; }
 
+	virtual void ProcessImage(float fElapsedTime, frame &input, frame &output) { output = input; }
 	virtual void ProcessKeys(float fElapsedTime) { }
-
-	virtual std::string GetName()
-	{
-		return name;
-	}
-
+	virtual std::string GetName() { return name; }
 	virtual void DrawUI(int x, int y, int stepy) { }
 
 protected:
-	olc::PixelGameEngine* game;
+	static olc::PixelGameEngine* game;
 private:
 	std::string name;
 };
 
+olc::PixelGameEngine* Processor::game;
 typemap& Processor::registry() { static typemap impl; return impl; }
 
 template <typename T> 

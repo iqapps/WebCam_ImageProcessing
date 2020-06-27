@@ -5,7 +5,7 @@
 class Convolution : public Processor
 {
 public:
-	Convolution(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Convolution") { }
+	Convolution() : Processor("Convolution") { }
 
 	static Registrar<Convolution> registrar;
 

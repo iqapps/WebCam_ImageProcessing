@@ -5,7 +5,7 @@
 class Lowpass : public Processor
 {
 public:
-	Lowpass(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Lowpass") { }
+	Lowpass() : Processor("Lowpass") { }
 
 	~Lowpass()
 	{

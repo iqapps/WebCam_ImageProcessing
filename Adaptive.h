@@ -5,7 +5,7 @@
 class Adaptive : public Processor
 {
 public:
-	Adaptive(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Adaptive") { }
+	Adaptive() : Processor("Adaptive") { }
 
 	static Registrar<Adaptive> registrar;
 

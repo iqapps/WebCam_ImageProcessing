@@ -5,7 +5,7 @@
 class Invert : public Processor
 {
 public:
-	Invert(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Invert") { }
+	Invert() : Processor("Invert") { }
 
 	static Registrar<Invert> registrar;
 

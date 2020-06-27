@@ -5,7 +5,7 @@
 class Normalize : public Processor
 {
 public:
-	Normalize(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Normalize") { }
+	Normalize() : Processor("Normalize") { }
 
 	~Normalize()
 	{

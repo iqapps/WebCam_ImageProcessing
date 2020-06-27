@@ -7,7 +7,7 @@ enum MORPHOP { DILATION, EROSION, EDGE };
 class Morpho : public Processor
 {
 public:
-	Morpho(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Morpho") { }
+	Morpho() : Processor("Morpho") { }
 	~Morpho()
 	{
 		activity.~frame();

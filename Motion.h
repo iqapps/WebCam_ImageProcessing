@@ -5,7 +5,7 @@
 class Motion : public Processor
 {
 public:
-	Motion(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Motion") { }
+	Motion() : Processor("Motion") { }
 	~Motion()
 	{
 		prev_input.~frame();

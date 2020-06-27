@@ -5,7 +5,7 @@
 class Threshold : public Processor
 {
 public:
-	Threshold(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Threshold") { }
+	Threshold() : Processor("Threshold") { }
 
 	static Registrar<Threshold> registrar;
 

@@ -5,7 +5,7 @@
 class Sobel : public Processor
 {
 public:
-	Sobel(olc::PixelGameEngine* gameArg) : Processor(gameArg, "Sobel") { }
+	Sobel() : Processor("Sobel") { }
 
 	static Registrar<Sobel> registrar;
 

@@ -107,7 +107,21 @@ public:
 		capture.mHeight = nFrameHeight;
 		capture.mTargetBuf = new int[nFrameWidth * nFrameHeight];
 		if (initCapture(sCamera, &capture) == 0)	return false;
-		algos.push_back(new Threshold(this));
+
+		Processor::SetEngine(this);
+
+		// start with the Threshold processor
+		const type_info& procType = typeid(Threshold);
+		auto factory = Processor::registry().find(procType)->second.func;
+		algos.push_back(factory());
+		prevIndex = 0;
+
+		for (auto& info : Processor::registry())
+		{
+			if(info.first == procType) { break; }
+			prevIndex++;
+		}
+
 		return true;
 	}
 
@@ -140,26 +154,12 @@ public:
 			}
 		}
 
-		Processor *proc = algos.back();
+		int procCount = Processor::registry().size();
+		algos.back()->ProcessKeys(fElapsedTime);
+		int procIndex = prevIndex;
 
-		proc->ProcessKeys(fElapsedTime);
-
-		int ii = 0;
-		int procIndex = -1;
-		for (auto& info : Processor::registry())
-		{
-			if (info.second.name == proc->GetName())
-			{ 
-				procIndex = ii;
-			}
-
-			ii++;
-		}
-
-		int prevIndex = procIndex;
 		if (GetKey(olc::Key::PGDN).bReleased && procIndex > 0) procIndex--;
-		if (GetKey(olc::Key::PGUP).bReleased && procIndex < (ii - 1)) procIndex++;
-
+		if (GetKey(olc::Key::PGUP).bReleased && procIndex + 1 < procCount) procIndex++;
 		bool newProc = GetKey(olc::Key::ENTER).bReleased;
 
 		if (prevIndex != procIndex || newProc)
@@ -167,7 +167,7 @@ public:
 			int jj = 0;
 			for (auto& info : Processor::registry())
 			{
-				if (procIndex == jj)
+				if (jj == procIndex)
 				{
 					if (newProc == false)
 					{
@@ -176,13 +176,15 @@ public:
 						algos.pop_back();
 					}
 
-					info.second.func(&algos, this);
+					algos.push_back(info.second.func());
 					break;
 				}
 
 				jj++;
 			}
 		}
+
+		prevIndex = procIndex;
 
 		if (GetKey(olc::Key::DEL).bReleased && algos.size() > 1)
 		{
@@ -227,6 +229,9 @@ public:
 		if (GetKey(olc::Key::ESCAPE).bPressed) return false;
 		return true;
 	}
+private:
+	int prevIndex;
+	Processor* current;
 };
 
 int main()

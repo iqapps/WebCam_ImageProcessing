@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Adaptive.h" />
     <ClInclude Include="Convolution.h" />
+    <ClInclude Include="Cutout.h" />
     <ClInclude Include="escapi.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Invert.h" />

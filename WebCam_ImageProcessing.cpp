@@ -77,6 +77,7 @@
 #include "Median.h"
 #include "Invert.h"
 #include "Normalize.h"
+#include "Cutout.h"
 
 struct ProcItem
 {

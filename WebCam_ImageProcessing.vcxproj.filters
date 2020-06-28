@@ -63,6 +63,9 @@
     <ClInclude Include="Normalize.h">
       <Filter>Header Files\Processors</Filter>
     </ClInclude>
+    <ClInclude Include="Cutout.h">
+      <Filter>Header Files\Processors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="escapi.cpp">
